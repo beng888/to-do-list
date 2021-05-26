@@ -7,3 +7,5 @@ export { default as QuickTask } from "./QuickTask";
 export { default as NewTask } from "./newtask";
 export { default as ToolBar } from "./toolbar";
 export { default as WelcomeScreen } from "./WelcomeScreen";
+export { default as Notification } from "./Notification";
+export { default as NoTasks } from "./NoTasks";

@@ -29,9 +29,10 @@ export default function ConfirmationModal() {
       }`}
     >
       <div className="w-full max-w-md p-4 mx-auto bg-gray-900">
-        {styleValue.confirmationModalOpen && <p>OPEN</p>}
         <p>Are you sure?</p>
-        <p className="mb-4 text-xs text-white">Quit without saving?</p>
+        <p className="mb-4 text-xs text-white">
+          {forDeleteValue ? "Delete Permanently?" : "Quit without saving?"}
+        </p>
         <div className="flex gap-4 ml-auto w-min">
           <p
             onClick={() =>
@@ -42,7 +43,7 @@ export default function ConfirmationModal() {
             CANCEL
           </p>
           <p onClick={() => handleClick()} className="cursor-pointer">
-            YES
+            {forDeleteValue ? "DELETE" : "YES"}
           </p>
         </div>
       </div>

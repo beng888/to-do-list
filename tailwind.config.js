@@ -4,6 +4,17 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      colors: {
+        blue: {
+          1: "#00ffff",
+          2: "#00efff",
+          3: "#00deff",
+          4: "#00cbff",
+          5: "#00b8ff",
+          6: "#00a3ff",
+          7: "#008cff",
+        },
+      },
       fontFamily: {
         sans: ["Poppins", "Sans-serif"],
       },
@@ -37,6 +48,9 @@ module.exports = {
         "2px": "2px",
         "3px": "3px",
         fit: "fit-content",
+      },
+      width: {
+        "50vw": "50vw",
       },
       margin: {
         "1vw": "1vw",

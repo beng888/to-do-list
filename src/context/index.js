@@ -22,32 +22,27 @@ export function GlobalContextWrapper({ children }) {
       list: "Default",
       date: "",
       time: "",
-      row_id: null,
+      row_id: "",
     };
 
-  const [user, setUser] = useState({ email: "", firstTask: true, done: [] }),
+  const [state, dispatch] = React.useReducer(todoReducer, { todos: [] }),
+    [notification, setNotification] = useState({ active: false, text: "" }),
+    [user, setUser] = useState({ email: "", firstTask: true, done: [] }),
     [toDoTask, setToDoTask] = useState(initialState),
+    [filteredList, setFilteredList] = useState([]),
+    [filter, setFilter] = useState("All Lists"),
     [forUpdate, setForUpdate] = useState(false),
     [forDelete, setForDelete] = useState(false),
-    [filter, setFilter] = useState("All Lists"),
     [loading, setLoading] = useState(false),
+    [search, setSearch] = useState(""),
     [style, setStyle] = useState({
+      slides: 1,
+      currentSlide: 0,
+      searching: false,
       showNewTask: false,
       confirmationModalOpen: false,
     }),
     { text, list, date, time, row_id } = toDoTask;
-
-  const [state, dispatch] = React.useReducer(todoReducer, {
-    todos: [],
-  });
-
-  useEffect(() => {
-    localStorage.setItem("userValue", JSON.stringify(user));
-  }, [user]);
-
-  /* -------------------------------------------------------------------------- */
-  /*                               CRUD OPERATIONS                              */
-  /* -------------------------------------------------------------------------- */
 
   /* ------------------------------- RESET STATES ------------------------------ */
 
@@ -57,61 +52,109 @@ export function GlobalContextWrapper({ children }) {
     setLoading(false);
     setStyle({
       ...style,
+      searching: false,
       showNewTask: false,
       confirmationModalOpen: false,
     });
   };
 
-  /* -------------------------------- GET TODOS ------------------------------- */
+  notification.active &&
+    setTimeout(() => {
+      setNotification({ text: "", active: false });
+    }, 2500);
 
-  useEffect(() => {
-    axios.get(`${URL}?${tabId}`).then((res) => {
-      dispatch({
-        type: GET_TODOS,
-        payload: { data: res.data.data, user: user.email },
-      });
-      console.log(res);
+  //* -------------------------------------------------------------------------- */
+  //*                               CRUD OPERATIONS                              */
+  //* -------------------------------------------------------------------------- */
+
+  const data = {
+    row_id: row_id,
+    status: "Ongoing",
+    text: text,
+    list: list,
+    date: date,
+    time: time,
+    user: user.email,
+    created_at: null,
+  };
+
+  console.log({ ...data, created_at: "hello" });
+
+  const handleData = (log, type, status, message, created_at) => {
+    console.log(log);
+
+    dispatch({
+      type: type,
+      payload: {
+        ...data,
+        status: status,
+        created_at: created_at,
+      },
     });
-  }, []);
 
-  /* -------------------------------- ADD TODO -------------------------------- */
+    setFilter(list === "Default" ? "All Lists" : list);
+    setNotification({ active: true, text: message });
+    restart();
+    if (user.firstTask) {
+      setUser({ ...user, firstTask: false });
+      localStorage.setItem("userValue", JSON.stringify(user));
+    }
+  };
+
+  // * -------------------------------- GET TODOS ------------------------------- */
+
+  const getTodos = () => {
+    axios
+      .get(`${URL}?${tabId}`)
+      .then((res) => {
+        console.log(res);
+        dispatch({
+          type: GET_TODOS,
+          payload: { data: res.data.data, user: user.email },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        const storageData = JSON.parse(localStorage.getItem("todoList"));
+        storageData &&
+          dispatch({
+            type: GET_TODOS,
+            payload: {
+              data: storageData,
+              user: user.email,
+            },
+          });
+      });
+    console.log(JSON.parse(localStorage.getItem("todoList")));
+    console.log(state.todos);
+  };
+
+  //* -------------------------------- ADD TODO -------------------------------- */
 
   const addTodo = () => {
     setLoading(true);
+
     axios
       .post(`${URL}?${tabId}`, [
         ["Ongoing", text, list, date, time, user.email, Date.now()],
       ])
       .then((res) => {
-        dispatch({
-          type: ADD_TODO,
-          payload: {
-            row_id: "",
-            status: "Ongoing",
-            text: text,
-            list: list,
-            date: date,
-            time: time,
-            user: user.email,
-            created_at: Date.now(),
-          },
-        });
-        restart();
-        if (res.status === 200 && user.firstTask) {
-          setUser({ ...user, firstTask: false });
-          // localStorage.setItem("userValue", JSON.stringify(user));
-        }
-        console.log(res);
+        handleData(res, ADD_TODO, "Ongoing", "Task Added", Date.now());
+      })
+      .catch((err) => {
+        handleData(err, ADD_TODO, "Ongoing", "Task Added", Date.now());
       });
   };
 
-  /* --------------------------- TOGGLE TODO STATUS --------------------------- */
+  //* --------------------------- TOGGLE TODO STATUS --------------------------- */
 
   const toggleTodo = async (id, status) => {
     dispatch({
       type: UPDATING_TODO,
-      payload: { id, status: "Updating" },
+      payload: { created_at: id, status: "Updating" },
     });
+    const message =
+      status === "Done" ? "Task Finished" : "Task forwarded to redo";
     axios
       .get(`${URL}/search?${tabId}&${searchKey}&searchValue=${id}`)
       .then((res) => {
@@ -121,48 +164,38 @@ export function GlobalContextWrapper({ children }) {
             status: status,
           })
           .then((res) => {
-            dispatch({
-              type: TOGGLE_TODO,
-              payload: { id: id, status: status },
-            });
-            console.log(res);
+            handleData(res, TOGGLE_TODO, status, message, id);
           });
+      })
+      .catch((err) => {
+        handleData(err, TOGGLE_TODO, status, message, id);
       });
   };
 
-  /* ------------------------------- UPDATE TODO ------------------------------ */
+  //* ------------------------------- UPDATE TODO ------------------------------ */
 
   const updateTodo = (id) => {
     setLoading(true);
-    const data = {
-      row_id: row_id,
-      status: "Ongoing",
-      text: text,
-      list: list,
-      date: date,
-      time: time,
-      user: user.email,
-      created_at: id,
-    };
+
     axios
       .get(`${URL}/search?${tabId}&${searchKey}&searchValue=${id}`)
       .then((res) => {
-        axios.put(`${URL}?${tabId}&row_id=${row_id}`, data).then((res) => {
-          dispatch({
-            type: UPDATE_TODO,
-            payload: data,
+        axios
+          .put(`${URL}?${tabId}&row_id=${row_id}`, { ...data, created_at: id })
+          .then((res) => {
+            handleData(res, UPDATE_TODO, "Ongoing", "Task Updated", id);
           });
-
-          restart();
-          console.log(res);
-        });
+      })
+      .catch((err) => {
+        handleData(err, UPDATE_TODO, "Ongoing", "Task Updated", id);
       });
   };
 
-  /* ------------------------------- DELETE TODO ------------------------------ */
+  //* ------------------------------- DELETE TODO ------------------------------ */
 
   const deleteTodo = (id) => {
     forDelete && setUser({ ...user, done: [...user.done, id] });
+    localStorage.setItem("userValue", JSON.stringify(user));
     setForDelete(false);
     dispatch({
       type: UPDATING_TODO,
@@ -174,24 +207,23 @@ export function GlobalContextWrapper({ children }) {
         axios
           .delete(`${URL}?${tabId}&row_id=${res.data[0].row_id}`)
           .then((res) => {
-            dispatch({
-              type: DELETE_TODO,
-              payload: id,
-            });
-            restart();
-            console.log(res);
+            handleData(res, DELETE_TODO, "", "Task Deleted", id);
           });
+      })
+      .catch((err) => {
+        handleData(err, DELETE_TODO, "", "Task Deleted", id);
       });
   };
 
-  /* -------------------------------------------------------------------------- */
-  /*                                 CONTEXT API                                */
-  /* -------------------------------------------------------------------------- */
+  //* -------------------------------------------------------------------------- */
+  //*                                 CONTEXT API                                */
+  //* -------------------------------------------------------------------------- */
 
   return (
     <GlobalContext.Provider
       value={{
         addTodo,
+        getTodos,
         toggleTodo,
         updateTodo,
         deleteTodo,
@@ -202,9 +234,12 @@ export function GlobalContextWrapper({ children }) {
         user: [user, setUser],
         style: [style, setStyle],
         filter: [filter, setFilter],
+        search: [search, setSearch],
         toDoTask: [toDoTask, setToDoTask],
         forUpdate: [forUpdate, setForUpdate],
         forDelete: [forDelete, setForDelete],
+        filteredList: [filteredList, setFilteredList],
+        notification: [notification, setNotification],
       }}
     >
       {children}

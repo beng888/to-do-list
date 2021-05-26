@@ -14,7 +14,7 @@ export default function Select({ selected, children, arrowClass }) {
       </div>
       <FaCaretDown
         tabIndex="0"
-        className={`${arrowClass} ml-auto text-4xl text-black transform pointer-events-none h-fit button group-focus:rotate-180 group-focus:pointer-events-auto group-hover:bg-blue-300 group-focus:bg-transparent`}
+        className={`${arrowClass} ml-auto text-3xl text-black transform pointer-events-none h-fit button group-focus:rotate-180 group-focus:pointer-events-auto group-hover:bg-blue-300 group-focus:bg-transparent`}
       />
     </div>
   );

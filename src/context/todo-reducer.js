@@ -9,8 +9,6 @@ import {
 
 const todoReducer = (state, action) => {
   switch (action.type) {
-    // setFilteredList(todos.filter((i) => i.list === filterValue));
-
     case GET_TODOS:
       return {
         ...state,
@@ -27,7 +25,7 @@ const todoReducer = (state, action) => {
       return {
         ...state,
         todos: state.todos.map((todo) =>
-          todo.created_at === action.payload.id
+          todo.created_at === action.payload.created_at
             ? { ...todo, status: action.payload.status }
             : todo
         ),
@@ -36,7 +34,7 @@ const todoReducer = (state, action) => {
       return {
         ...state,
         todos: state.todos.map((todo) =>
-          todo.created_at === action.payload.id
+          todo.created_at === action.payload.created_at
             ? { ...todo, status: action.payload.status }
             : todo
         ),
@@ -51,7 +49,9 @@ const todoReducer = (state, action) => {
     case DELETE_TODO:
       return {
         ...state,
-        todos: state.todos.filter((todo) => todo.created_at !== action.payload),
+        todos: state.todos.filter(
+          (todo) => todo.created_at !== action.payload.created_at
+        ),
       };
     default:
       return state;

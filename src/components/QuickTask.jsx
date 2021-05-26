@@ -8,8 +8,15 @@ export default function Quicktask() {
   const [toDoTaskValue, setToDoTaskValue] = toDoTask;
 
   return (
-    <div className="fixed bottom-0 flex w-full px-2 pt-2 bg-indigo-500">
-      <div className="w-full">
+    <div className="fixed bottom-0 flex w-full px-2 pt-2 primary-bg-2">
+      <form
+        autoComplete="off"
+        className="w-full"
+        onSubmit={(e) => {
+          e.preventDefault();
+          addTodo();
+        }}
+      >
         <Input
           type="text"
           value={toDoTaskValue.text}
@@ -20,7 +27,8 @@ export default function Quicktask() {
         >
           Enter Quick Task Here
         </Input>
-      </div>
+        <button className="absolute"></button>
+      </form>
 
       {toDoTaskValue.text && (
         <div className="mx-2 text-2xl text-white cursor-pointer max-w-min">

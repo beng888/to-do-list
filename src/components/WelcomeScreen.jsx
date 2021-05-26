@@ -13,20 +13,22 @@ export default function WelcomeScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setUserValue({ ...userValue, email: email, done: [] });
-    localStorage.setItem("userValue", JSON.stringify(userValue));
+    setUserValue({ email: email, done: [], firstTask: true });
   };
 
   useEffect(() => {
     const storageData = JSON.parse(localStorage.getItem("userValue"));
+    console.log(storageData);
     storageData && setUserValue(storageData);
     setLoading(false);
   }, []);
 
-  userValue.email &&
+  if (userValue.email) {
+    localStorage.setItem("userValue", JSON.stringify(userValue));
     setTimeout(() => {
       setReveal(true);
-    }, 2000);
+    }, 1);
+  }
 
   return (
     <div

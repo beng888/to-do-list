@@ -1,8 +1,35 @@
 import { RiCloseCircleFill } from "react-icons/ri";
 import { FcCalendar, FcAlarmClock } from "react-icons/fc";
+import { useRef, useEffect } from "react";
 
-export default function Input({ value, type, onChange, remove, children }) {
+export default function Input({
+  value,
+  type,
+  onChange,
+  remove,
+  focused,
+  children,
+}) {
   const textOrEmail = type === "text" || type === "email";
+  const inputRef = useRef(null);
+
+  let dtToday = new Date(),
+    month = dtToday.getMonth() + 1,
+    day = dtToday.getDate(),
+    year = dtToday.getFullYear();
+
+  if (month < 10) month = "0" + month.toString();
+  if (day < 10) day = "0" + day.toString();
+
+  const maxDate = year + "-" + month + "-" + day;
+
+  useEffect(() => {
+    focused && inputRef.current.focus();
+    inputRef.current.name === "date" &&
+      inputRef.current.setAttribute("min", maxDate);
+  }, [focused]);
+  // or instead:
+  // var maxDate = dtToday.toISOString().substr(0, 10);
 
   return (
     <div className="flex items-center">
@@ -15,6 +42,7 @@ export default function Input({ value, type, onChange, remove, children }) {
             className={`${!value && type !== "text" && "opacity-0"} w-full`}
           >
             <input
+              ref={inputRef}
               required
               type={type}
               name={type}
@@ -33,9 +61,9 @@ export default function Input({ value, type, onChange, remove, children }) {
           {!textOrEmail && (
             <span className="absolute text-lg text-white duration-300 rounded-full pointer-events-none group-hover:bg-opacity-90 right-1 group-hover:bg-blue-400">
               {type === "date" ? (
-                <FcCalendar className="text-4xl button" />
+                <FcCalendar className="text-3xl button" />
               ) : type === "time" ? (
-                <FcAlarmClock className="text-4xl button" />
+                <FcAlarmClock className="text-3xl button" />
               ) : (
                 <div />
               )}
@@ -56,11 +84,11 @@ export default function Input({ value, type, onChange, remove, children }) {
             />
           </div>
         </div>
-      </div>{" "}
+      </div>
       {value && type !== "email" && remove && (
         <RiCloseCircleFill
           onClick={() => remove()}
-          className="text-4xl text-white transform -translate-y-1 button"
+          className="text-3xl text-white transform -translate-y-1 button"
         />
       )}
     </div>

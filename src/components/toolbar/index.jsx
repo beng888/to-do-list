@@ -19,7 +19,6 @@ export default function ToolBar() {
     if (styleValue.searching) {
       const Ongoing = todos.filter((i) => i.status !== "Done");
       setFilteredListValue(Ongoing.filter((i) => i.text.includes(searchValue)));
-      console.log(filteredListValue);
     } else {
       if (filterValue === "All Lists") {
         setFilteredListValue(todos.filter((i) => i.status !== "Done"));
@@ -34,11 +33,11 @@ export default function ToolBar() {
   }, [todos, filterValue, searchValue]);
 
   useEffect(() => {
-    todos.length > 1 && localStorage.setItem("todoList", JSON.stringify(todos));
+    todos.length > 0 && localStorage.setItem("todoList", JSON.stringify(todos));
   }, [todos]);
 
   return (
-    <div className="fixed top-0 z-40 flex items-center justify-between w-full h-16 px-4 text-lg text-white shadow-lg primary-bg-2 ">
+    <div className="fixed top-0 z-10 flex items-center justify-between w-full h-16 px-4 text-lg text-white shadow-lg primary-bg-2">
       <div className="relative">
         <Filter
           setFilter={setFilterValue}

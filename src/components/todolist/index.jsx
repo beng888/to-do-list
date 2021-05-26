@@ -97,7 +97,7 @@ export default function ToDoList() {
         })}
       <div className="z-20 flex justify-center w-screen pt-4 text-3xl text-white h-28 sm:hidden">
         {loading && <BiLoaderAlt className="animate-spin" />}
-        {limit >= filteredListValue.length && (
+        {limit >= filteredListValue.length && filteredListValue.length > 20 && (
           <BiArrowToTop
             className="cursor-pointer animate-pulse"
             onClick={() => scrollTop()}

@@ -13,9 +13,9 @@ import {
 const GlobalContext = React.createContext();
 
 export function GlobalContextWrapper({ children }) {
-  const URL = "https://v1.nocodeapi.com/beng88/google_sheets/PzluirzcnArJpwbm",
-    tabId = "tabId=Sheet1",
-    searchKey = "searchKey=created_at",
+  const URL = process.env.REACT_APP_API_URL,
+    tabId = process.env.REACT_APP_TAB_ID,
+    searchKey = process.env.REACT_APP_SEARCH_KEY,
     options = ["Default", "Personal", "Shopping", "Wishlist", "Work"],
     initialState = {
       text: "",
@@ -37,7 +37,7 @@ export function GlobalContextWrapper({ children }) {
     [search, setSearch] = useState(""),
     [style, setStyle] = useState({
       slides: 1,
-      currentSlide: 0,
+      currentSlide: 1,
       searching: false,
       showNewTask: false,
       confirmationModalOpen: false,
@@ -78,8 +78,6 @@ export function GlobalContextWrapper({ children }) {
     created_at: null,
   };
 
-  console.log({ ...data, created_at: "hello" });
-
   const handleData = (log, type, status, message, created_at) => {
     console.log(log);
 
@@ -92,7 +90,11 @@ export function GlobalContextWrapper({ children }) {
       },
     });
 
-    setFilter(list === "Default" ? "All Lists" : list);
+    message === "Task Added" &&
+      setFilter(list === "Default" ? "All Lists" : list);
+
+    filter !== "Finished" && setFilter(list === "Default" ? "All Lists" : list);
+
     setNotification({ active: true, text: message });
     restart();
     if (user.firstTask) {
@@ -125,8 +127,6 @@ export function GlobalContextWrapper({ children }) {
             },
           });
       });
-    console.log(JSON.parse(localStorage.getItem("todoList")));
-    console.log(state.todos);
   };
 
   //* -------------------------------- ADD TODO -------------------------------- */

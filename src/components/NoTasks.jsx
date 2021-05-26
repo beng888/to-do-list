@@ -6,9 +6,6 @@ export default function Notasks() {
     [searchValue] = search,
     [filterValue] = filter;
 
-  console.log(searchValue);
-  console.log(filterValue);
-
   return (
     <div className="relative grid content-center h-full m-auto text-center text-gray-100 max-w-80vw">
       {styleValue.searching ? (

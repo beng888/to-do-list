@@ -32,7 +32,6 @@ export default function NewTask({ open }) {
       }
     } else {
       setNotificationValue({ active: true, text: "Enter a task first" });
-      console.log(notificationValue);
     }
   };
 
@@ -50,8 +49,10 @@ export default function NewTask({ open }) {
 
   return (
     <div
-      className={`fixed w-full inset-0 transform duration-500 pt-5vw overflow-y-auto primary-bg font-bold text-blue-300 ${
-        open ? "translate-x-0" : "translate-x-full"
+      className={`fixed w-full sm:max-w-xl  mx-auto  inset-0 transform duration-500 pt-16 z-20 overflow-y-auto primary-bg font-bold text-blue-300 ${
+        open
+          ? "translate-x-0 sm:scale-1"
+          : "translate-x-full sm:scale-0 sm:translate-x-0"
       }`}
     >
       <div className="fixed top-0 left-0 flex items-center justify-between w-full px-4 py-3 text-xl text-white shadow-lg primary-bg-2">
@@ -77,11 +78,11 @@ export default function NewTask({ open }) {
         setToDo={setToDoTaskValue}
         options={listOptions}
       />
-      <div className="w-full mt-12 overflow-hidden px-9vw h-14">
+      <div className="w-full mt-12 mb-4 overflow-hidden px-9vw sm:px-8 h-14">
         <div className="relative ml-auto w-max">
           <AiFillCheckCircle
             onClick={handleSubmit}
-            className="text-5xl text-black bg-blue-300 rounded-full cursor-pointer "
+            className="text-5xl text-black bg-blue-300 rounded-full cursor-pointer"
           />
           {loading && (
             <RiLoader5Line className="absolute top-0 text-5xl text-blue-300 rounded-full animate-spin" />

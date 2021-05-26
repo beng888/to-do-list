@@ -8,7 +8,7 @@ import {
 import useGlobalContext from "context";
 
 export default function AddNewTask({ addTask, animate }) {
-  const { style, filteredList } = useGlobalContext(),
+  const { style, filteredList, todos } = useGlobalContext(),
     [styleValue, setStyleValue] = style,
     [filteredListValue] = filteredList;
 
@@ -17,20 +17,21 @@ export default function AddNewTask({ addTask, animate }) {
       ...styleValue,
       slides: Math.ceil(filteredListValue.length / 10),
     });
-  }, [filteredListValue]);
-
-  console.log(styleValue.slides);
-  console.log(styleValue.currentSlide);
+  }, [filteredListValue, todos]);
 
   return (
     <div className="absolute flex items-center justify-center w-full text-gray-200 pointer-events-none bottom-16 ">
       <div
         className={`flex gap-x-4 invisible ${
-          filteredListValue && styleValue.slides >= 1 && "sm:visible"
+          filteredListValue.length > 10 &&
+          styleValue.slides >= 1 &&
+          "sm:visible"
         }`}
       >
         <FaRegArrowAltCircleLeft
-          className="text-4xl pointer-events-auto button"
+          className={`text-4xl pointer-events-auto button ${
+            styleValue.currentSlide === 1 && "opacity-40"
+          }`}
           onClick={() =>
             setStyleValue({
               ...styleValue,
@@ -56,7 +57,9 @@ export default function AddNewTask({ addTask, animate }) {
           ))}
         </div>
         <FaRegArrowAltCircleRight
-          className="text-4xl pointer-events-auto button"
+          className={`text-4xl pointer-events-auto button ${
+            styleValue.currentSlide === styleValue.slides && "opacity-40"
+          }`}
           onClick={() =>
             setStyleValue({
               ...styleValue,

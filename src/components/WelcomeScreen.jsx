@@ -18,7 +18,6 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     const storageData = JSON.parse(localStorage.getItem("userValue"));
-    console.log(storageData);
     storageData && setUserValue(storageData);
     setLoading(false);
   }, []);
@@ -27,7 +26,7 @@ export default function WelcomeScreen() {
     localStorage.setItem("userValue", JSON.stringify(userValue));
     setTimeout(() => {
       setReveal(true);
-    }, 1);
+    }, 2000);
   }
 
   return (

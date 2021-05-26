@@ -82,16 +82,18 @@ export default function Todo({
                 </div>
               ) : !done && filterValue === "Finished" ? (
                 <MdUnarchive
+                  className="text-xl"
                   onClick={() => toggleTodo(task.created_at, "Ongoing")}
                 />
               ) : done ? (
-                <div>
+                <div className="duration-300 hover:text-blue-4">
                   {task.status === "Deleting" ? (
                     <BiLoader className="animate-spin" />
                   ) : filterValue === "Finished" ? (
                     <FaTrashAlt onClick={() => deleteTodo(task.created_at)} />
                   ) : (
                     <MdArchive
+                      className="text-xl"
                       onClick={() => toggleTodo(task.created_at, "Done")}
                     />
                   )}

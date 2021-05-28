@@ -8,66 +8,57 @@ import {
 import useGlobalContext from "context";
 
 export default function AddNewTask({ addTask, animate }) {
-  const { style, filteredList, todos } = useGlobalContext(),
-    [styleValue, setStyleValue] = style,
-    [filteredListValue] = filteredList;
+  const { filteredList, slide, currentSlide } = useGlobalContext(),
+    [slideValue, setSlideValue] = slide,
+    [filteredListValue] = filteredList,
+    [currentSlideValue, setCurrentSlideValue] = currentSlide;
 
   useEffect(() => {
-    setStyleValue({
-      ...styleValue,
-      slides: Math.ceil(filteredListValue.length / 10),
-    });
-  }, [filteredListValue, todos]);
+    const length = Math.ceil(filteredListValue.length / 10);
+    setSlideValue(length);
+    if (currentSlideValue > 1 && currentSlideValue > slideValue) {
+      setCurrentSlideValue(slideValue);
+    }
+  }, [filteredListValue, slideValue]);
 
   return (
     <div className="absolute flex items-center justify-center w-full text-gray-200 pointer-events-none bottom-16 ">
       <div
         className={`flex gap-x-4 invisible ${
-          filteredListValue.length > 10 &&
-          styleValue.slides >= 1 &&
-          "sm:visible"
+          filteredListValue.length > 10 && slideValue > 1 && "sm:visible"
         }`}
       >
         <FaRegArrowAltCircleLeft
           className={`text-4xl pointer-events-auto button ${
-            styleValue.currentSlide === 1 && "opacity-40"
+            currentSlideValue === 1 && "opacity-40"
           }`}
           onClick={() =>
-            setStyleValue({
-              ...styleValue,
-              currentSlide:
-                styleValue.currentSlide > 1 ? styleValue.currentSlide - 1 : 1,
-            })
+            setCurrentSlideValue(
+              currentSlideValue > 1 ? currentSlideValue - 1 : 1
+            )
           }
         />
         <div className="flex items-center pointer-events-auto gap-x-3">
-          {[...Array(styleValue.slides).keys()].map((v, i) => (
+          {[...Array(slideValue).keys()].map((v, i) => (
             <FaCircle
               key={i}
               className={`${
-                styleValue.currentSlide === i + 1 && "text-blue-7"
+                currentSlideValue === i + 1 && "text-blue-7"
               } text-xs duration-300 cursor-pointer hover:opacity-50`}
-              onClick={() =>
-                setStyleValue({
-                  ...styleValue,
-                  currentSlide: i + 1,
-                })
-              }
+              onClick={() => setCurrentSlideValue(i + 1)}
             />
           ))}
         </div>
         <FaRegArrowAltCircleRight
           className={`text-4xl pointer-events-auto button ${
-            styleValue.currentSlide === styleValue.slides && "opacity-40"
+            currentSlideValue === slideValue && "opacity-40"
           }`}
           onClick={() =>
-            setStyleValue({
-              ...styleValue,
-              currentSlide:
-                styleValue.currentSlide < styleValue.slides
-                  ? styleValue.currentSlide + 1
-                  : styleValue.slides,
-            })
+            setCurrentSlideValue(
+              currentSlideValue < slideValue
+                ? currentSlideValue + 1
+                : slideValue
+            )
           }
         />
       </div>

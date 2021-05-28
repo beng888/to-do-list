@@ -4,10 +4,10 @@ import useGlobalContext from "context";
 export default function ConfirmationModal() {
   const { style, toDoTask, reset, forUpdate, forDelete, deleteTodo } =
       useGlobalContext(),
-    [forDeleteValue] = forDelete,
     [styleValue, setStyleValue] = style,
     [toDoTaskValue, setToDoTaskValue] = toDoTask,
-    [forUpdateValue, setForUpdateValue] = forUpdate;
+    [forUpdateValue, setForUpdateValue] = forUpdate,
+    [forDeleteValue, setForDeleteValue] = forDelete;
 
   const handleClick = () => {
     forDeleteValue && deleteTodo(toDoTaskValue.created_at);
@@ -35,9 +35,10 @@ export default function ConfirmationModal() {
         </p>
         <div className="flex gap-4 ml-auto w-min">
           <p
-            onClick={() =>
-              setStyleValue({ ...styleValue, confirmationModalOpen: false })
-            }
+            onClick={() => {
+              setStyleValue({ ...styleValue, confirmationModalOpen: false });
+              setForDeleteValue(false);
+            }}
             className="cursor-pointer"
           >
             CANCEL

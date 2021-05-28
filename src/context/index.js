@@ -35,9 +35,9 @@ export function GlobalContextWrapper({ children }) {
     [forDelete, setForDelete] = useState(false),
     [loading, setLoading] = useState(false),
     [search, setSearch] = useState(""),
+    [slide, setSlide] = useState(1),
+    [currentSlide, setCurrentSlide] = useState(1),
     [style, setStyle] = useState({
-      slides: 1,
-      currentSlide: 1,
       searching: false,
       showNewTask: false,
       confirmationModalOpen: false,
@@ -202,7 +202,7 @@ export function GlobalContextWrapper({ children }) {
     setForDelete(false);
     dispatch({
       type: UPDATING_TODO,
-      payload: { id, status: "Deleting" },
+      payload: { created_at: id, status: "Deleting" },
     });
     axios
       .get(`${URL}/search?${tabId}&${searchKey}&searchValue=${id}`)
@@ -236,6 +236,8 @@ export function GlobalContextWrapper({ children }) {
         listOptions: options,
         user: [user, setUser],
         style: [style, setStyle],
+        slide: [slide, setSlide],
+        currentSlide: [currentSlide, setCurrentSlide],
         filter: [filter, setFilter],
         search: [search, setSearch],
         toDoTask: [toDoTask, setToDoTask],

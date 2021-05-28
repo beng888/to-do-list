@@ -1,10 +1,11 @@
 import React from "react";
 
-export default function Shadow({ open }) {
+export default function Shadow({ open, close }) {
   return (
     <div
-      className={`absolute inset-0 bg-black z-20 duration-500 pointer-events-none ${
-        open ? "bg-opacity-60" : "bg-opacity-0"
+      onClick={() => close()}
+      className={`absolute inset-0 bg-black z-20 duration-500  ${
+        open ? "bg-opacity-60" : "bg-opacity-0 pointer-events-none"
       }`}
     />
   );

@@ -1,5 +1,5 @@
 import useGlobalContext from "context";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiLoaderAlt, BiArrowToTop } from "react-icons/bi";
 import Todo from "./Todo";
 
@@ -13,10 +13,12 @@ export default function ToDoList() {
       deleteTodo,
       style,
       filteredList,
+      currentSlide,
     } = useGlobalContext(),
     [filterValue] = filter,
     [userValue, setUserValue] = user,
     [filteredListValue] = filteredList,
+    [currentSlideValue] = currentSlide,
     [styleValue, setStyleValue] = style,
     [toDoTaskValue, setToDoTaskValue] = toDoTask,
     [forUpdateValue, setForUpdateValue] = forUpdate;
@@ -71,9 +73,7 @@ export default function ToDoList() {
       className="grid w-screen max-h-screen pt-24 overflow-x-hidden overflow-y-auto duration-700 transform sm:overflow-visible sm:grid-flow-col sm:grid-rows-5 bg-black-500"
       style={{
         transform: `translateX(${
-          window.innerWidth <= 640
-            ? "0"
-            : `-${styleValue.currentSlide * 100 - 100}%`
+          window.innerWidth <= 640 ? "0" : `-${currentSlideValue * 100 - 100}%`
         })`,
       }}
     >

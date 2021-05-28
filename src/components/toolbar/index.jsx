@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Filter from "./Filter";
 import Search from "./Search";
 import useGlobalContext from "context";
@@ -10,8 +10,6 @@ export default function ToolBar() {
     [searchValue, setSearchValue] = search,
     [styleValue, setStyleValue] = style,
     [filterValue, setFilterValue] = filter;
-
-  const [openSearch, setOpenSearch] = useState(false);
 
   /* ---------------------------- FILTER TODO LIST ---------------------------- */
 

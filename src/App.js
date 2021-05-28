@@ -11,7 +11,10 @@ function App() {
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-hidden max-w-100vw">
       <$.WelcomeScreen />
-      <$.Shadow open={open} />
+      <$.Shadow
+        open={open}
+        close={() => setstyleValue({ ...styleValue, showNewTask: false })}
+      />
       <div
         className={` w-full h-full items-center flex flex-col primary-bg transform duration-500 ${
           open ? "-translate-x-1/3 sm:translate-x-0" : "translate-x-0"
@@ -27,7 +30,7 @@ function App() {
         <$.AddNewTask
           addTask={() => setstyleValue({ ...styleValue, showNewTask: true })}
           animate={userValue.firstTask}
-        />{" "}
+        />
       </div>
       <$.QuickTask />
       <$.NewTask open={open} />

@@ -52,7 +52,7 @@ export default function NewTask({ open }) {
       className={`fixed w-full sm:max-w-xl  mx-auto  inset-0 transform duration-500 pt-16 z-20 overflow-y-auto primary-bg font-bold text-blue-300 ${
         open
           ? "translate-x-0 sm:scale-1"
-          : "translate-x-full sm:scale-0 sm:translate-x-0"
+          : "translate-x-full sm:scale-x-0 sm:scale-y-50 sm:translate-x-0"
       }`}
     >
       <div className="fixed top-0 left-0 flex items-center justify-between w-full px-4 py-3 text-xl text-white shadow-lg primary-bg-2">

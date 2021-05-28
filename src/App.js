@@ -1,17 +1,12 @@
 import * as $ from "components";
 import useGlobalContext from "context";
-import { useEffect } from "react";
 
 function App() {
-  const { style, user, filteredList, getTodos } = useGlobalContext(),
+  const { style, user, filteredList } = useGlobalContext(),
     [styleValue, setstyleValue] = style,
     [filteredListValue] = filteredList,
     open = styleValue.showNewTask,
     [userValue] = user;
-
-  // useEffect(() => {
-  //   getTodos();
-  // }, []);
 
   return (
     <div className="relative w-screen h-screen max-h-screen overflow-hidden max-w-100vw">

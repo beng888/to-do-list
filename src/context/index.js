@@ -105,14 +105,14 @@ export function GlobalContextWrapper({ children }) {
 
   // * -------------------------------- GET TODOS ------------------------------- */
 
-  const getTodos = () => {
+  const getTodos = (email) => {
     axios
       .get(`${URL}?${tabId}`)
       .then((res) => {
         console.log(res);
         dispatch({
           type: GET_TODOS,
-          payload: { data: res.data.data, user: user.email },
+          payload: { data: res.data.data, user: email },
         });
       })
       .catch((err) => {

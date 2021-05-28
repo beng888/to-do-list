@@ -5,7 +5,7 @@ import Input from "utils/Input";
 import useGlobalContext from "context";
 
 export default function WelcomeScreen() {
-  const { user } = useGlobalContext(),
+  const { user, getTodos } = useGlobalContext(),
     [userValue, setUserValue] = user,
     [loading, setLoading] = useState(true),
     [reveal, setReveal] = useState(false),
@@ -18,16 +18,19 @@ export default function WelcomeScreen() {
 
   useEffect(() => {
     const storageData = JSON.parse(localStorage.getItem("userValue"));
-    storageData && setUserValue(storageData);
+    if (storageData) setUserValue(storageData);
     setLoading(false);
   }, []);
 
-  if (userValue.email) {
-    localStorage.setItem("userValue", JSON.stringify(userValue));
-    setTimeout(() => {
-      setReveal(true);
-    }, 2000);
-  }
+  useEffect(() => {
+    if (userValue.email) {
+      localStorage.setItem("userValue", JSON.stringify(userValue));
+      getTodos(userValue.email);
+      setTimeout(() => {
+        setReveal(true);
+      }, 2000);
+    }
+  }, [userValue.email]);
 
   return (
     <div

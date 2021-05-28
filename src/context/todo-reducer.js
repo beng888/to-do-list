@@ -13,7 +13,7 @@ const todoReducer = (state, action) => {
       return {
         ...state,
         todos: action.payload.data.filter(
-          (i) => i.user !== action.payload.user
+          (i) => i.user === action.payload.user
         ),
       };
     case ADD_TODO:

@@ -181,7 +181,10 @@ export function GlobalContextWrapper({ children }) {
       .get(`${URL}/search?${tabId}&${searchKey}&searchValue=${id}`)
       .then((res) => {
         axios
-          .put(`${URL}?${tabId}&row_id=${row_id}`, { ...data, created_at: id })
+          .put(`${URL}?${tabId}&row_id=${res.data[0].row_id}`, {
+            ...data,
+            created_at: id,
+          })
           .then((res) => {
             handleData(res, UPDATE_TODO, "Ongoing", "Task Updated", id);
           });

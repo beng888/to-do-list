@@ -1,5 +1,5 @@
 import useGlobalContext from "context";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiLoaderAlt, BiArrowToTop } from "react-icons/bi";
 import Todo from "./Todo";
 
@@ -41,17 +41,18 @@ export default function ToDoList() {
   };
 
   const tasksPerPage =
-    filteredListValue.length > 20 ? 20 : filteredListValue.length;
+    filteredListValue.length > 15 ? 15 : filteredListValue.length;
 
   const [limit, setLimit] = useState(tasksPerPage);
   const [loading, setLoading] = useState(false);
+  const [mobile, setMobile] = useState(false);
 
   function handleScroll(e) {
     if (window.innerWidth > 640) return;
     if (limit >= filteredListValue.length) return;
-
     const target = e.target;
-    if (target.scrollHeight - target.scrollTop === target.clientHeight) {
+
+    if (target.scrollHeight - target.scrollTop - 10 < target.clientHeight) {
       setLoading(true);
       setTimeout(() => {
         if (limit < filteredListValue.length) {
@@ -66,6 +67,12 @@ export default function ToDoList() {
     document.getElementById("todos").scrollTo(0, 0);
   }
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth <= 640 ? setMobile(true) : setMobile(false);
+    });
+  }, []);
+
   return (
     <div
       id="todos"
@@ -73,7 +80,7 @@ export default function ToDoList() {
       className="grid w-screen max-h-screen pt-24 overflow-x-hidden overflow-y-auto duration-700 transform sm:overflow-visible sm:grid-flow-col sm:grid-rows-5 bg-black-500"
       style={{
         transform: `translateX(${
-          window.innerWidth <= 640 ? "0" : `-${currentSlideValue * 100 - 100}%`
+          mobile ? "0" : `-${currentSlideValue * 100 - 100}%`
         })`,
       }}
     >

@@ -148,7 +148,7 @@ export function GlobalContextWrapper({ children }) {
 
   //* --------------------------- TOGGLE TODO STATUS --------------------------- */
 
-  const toggleTodo = async (id, status) => {
+  const toggleTodo = (id, status) => {
     dispatch({
       type: UPDATING_TODO,
       payload: { created_at: id, status: "Updating" },
@@ -237,7 +237,6 @@ export function GlobalContextWrapper({ children }) {
         user: [user, setUser],
         style: [style, setStyle],
         slide: [slide, setSlide],
-        currentSlide: [currentSlide, setCurrentSlide],
         filter: [filter, setFilter],
         search: [search, setSearch],
         toDoTask: [toDoTask, setToDoTask],
@@ -245,6 +244,7 @@ export function GlobalContextWrapper({ children }) {
         forDelete: [forDelete, setForDelete],
         filteredList: [filteredList, setFilteredList],
         notification: [notification, setNotification],
+        currentSlide: [currentSlide, setCurrentSlide],
       }}
     >
       {children}
